@@ -9,6 +9,12 @@ import { getUiSettings, saveUiSettings } from '../services/settings';
 import { useSettingsStore } from '../store/useSettingsStore';
 import { useI18n } from '../i18n';
 
+const DEFAULT_PROVIDER_ITEMS = [
+  { provider_key: 'openrouter', display_name: 'OpenRouter', base_url: 'https://openrouter.ai/api/v1', api_key: '', is_enabled: true },
+  { provider_key: 'ollama', display_name: 'Ollama', base_url: 'http://localhost:11434', api_key: '', is_enabled: true },
+  { provider_key: 'lmstudio', display_name: 'LM Studio', base_url: 'http://localhost:1234/v1', api_key: '', is_enabled: true },
+];
+
 export function SettingsPage() {
   const t = useI18n();
   const [mode, setMode] = useState<'THREE' | 'FIVE'>('THREE');
@@ -27,12 +33,24 @@ export function SettingsPage() {
   const setConsensusRule = useSettingsStore((s) => s.setConsensusRule);
 
   useEffect(() => {
-    getAgentConfigs(mode).then((res) => setAgents(res.items));
+    getAgentConfigs(mode)
+      .then((res) => setAgents(res.items || []))
+      .catch(() => setAgents([]));
   }, [mode]);
 
   useEffect(() => {
-    getProviders().then((res) => setProviders(res.items || []));
-    getUiSettings().then(hydrate);
+    getProviders()
+      .then((res) => {
+        const items = res?.items || [];
+        setProviders(items.length ? items : DEFAULT_PROVIDER_ITEMS);
+      })
+      .catch(() => setProviders(DEFAULT_PROVIDER_ITEMS));
+
+    getUiSettings()
+      .then(hydrate)
+      .catch(() => {
+        // keep local defaults when server-side settings are unavailable
+      });
   }, [hydrate]);
 
   const saveLanguages = async () => {
