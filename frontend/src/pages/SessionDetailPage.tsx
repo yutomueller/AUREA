@@ -18,7 +18,7 @@ export function SessionDetailPage() {
   return (
     <div className="dashboard-grid">
       <div className="center-col">
-        <CoreDecisionPanel result={detail.session.final_result} summary={detail.session.final_summary} status={detail.session.status} />
+        <CoreDecisionPanel result={detail.session.final_result} status={detail.session.status} />
         <VoteMatrix messages={detail.messages} />
       </div>
       <div className="right-col">

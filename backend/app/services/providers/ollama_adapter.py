@@ -10,7 +10,7 @@ class OllamaAdapter(BaseProviderAdapter):
     async def generate(self, messages):
         start = perf_counter()
         prompt = '\n'.join([f"{m['role'].upper()}: {m['content']}" for m in messages])
-        async with httpx.AsyncClient(timeout=120) as client:
+        async with httpx.AsyncClient(timeout=self.timeout_seconds) as client:
             response = await client.post(
                 (self.base_url or 'http://localhost:11434') + '/api/generate',
                 json={'model': self.model_name, 'prompt': prompt, 'stream': False, 'options': {'num_predict': self.max_tokens}},
