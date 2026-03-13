@@ -1,25 +1,44 @@
 import { useEffect, useState } from 'react';
-import { QueryInputForm } from '../components/forms/QueryInputForm';
-import { RunModeSelector } from '../components/forms/RunModeSelector';
 import { CoreDecisionPanel } from '../components/magi/CoreDecisionPanel';
 import { DebateLogPanel } from '../components/magi/DebateLogPanel';
-import { VoteMatrix } from '../components/magi/VoteMatrix';
 import { AgentNodeCard } from '../components/magi/AgentNodeCard';
 import { createSession, runSession } from '../services/sessions';
 import { getAgentConfigs } from '../services/agents';
 import { useSessionStore } from '../store/useSessionStore';
+import { useSettingsStore } from '../store/useSettingsStore';
+import { useI18n } from '../i18n';
+
+
+const FALLBACK_AGENT_CONFIGS: Record<'THREE' | 'FIVE', Array<{ agent_name: string; role_label: string; provider_key: string; model_name: string }>> = {
+  THREE: [
+    { agent_name: 'MELCHIOR', role_label: 'Logic', provider_key: 'core', model_name: 'AUREA-01' },
+    { agent_name: 'BALTHASAR', role_label: 'Emotion', provider_key: 'core', model_name: 'AUREA-02' },
+    { agent_name: 'CASPER', role_label: 'Instinct', provider_key: 'core', model_name: 'AUREA-03' },
+  ],
+  FIVE: [
+    { agent_name: 'MELCHIOR', role_label: 'Logic', provider_key: 'core', model_name: 'AUREA-01' },
+    { agent_name: 'BALTHASAR', role_label: 'Emotion', provider_key: 'core', model_name: 'AUREA-02' },
+    { agent_name: 'CASPER', role_label: 'Instinct', provider_key: 'core', model_name: 'AUREA-03' },
+    { agent_name: 'RAPHAEL', role_label: 'Risk', provider_key: 'core', model_name: 'AUREA-04' },
+    { agent_name: 'URIEL', role_label: 'Ethics', provider_key: 'core', model_name: 'AUREA-05' },
+  ],
+};
 
 export function DashboardPage() {
+  const t = useI18n();
   const [title, setTitle] = useState('');
   const [query, setQuery] = useState('');
-  const [agentMode, setAgentMode] = useState<'THREE' | 'FIVE'>('THREE');
-  const [decisionMode, setDecisionMode] = useState<'SIMPLE' | 'DEBATE'>('DEBATE');
-  const [consensusRule, setConsensusRule] = useState<'MAJORITY' | 'UNANIMOUS'>('MAJORITY');
+  const agentMode = useSettingsStore((s) => s.agentMode);
+  const decisionMode = useSettingsStore((s) => s.decisionMode);
+  const consensusRule = useSettingsStore((s) => s.consensusRule);
   const [agentConfigs, setAgentConfigs] = useState<any[]>([]);
   const { currentSession, setCurrentSession, loading, setLoading } = useSessionStore();
 
   useEffect(() => {
-    getAgentConfigs(agentMode).then((res) => setAgentConfigs(res.items));
+    setAgentConfigs(FALLBACK_AGENT_CONFIGS[agentMode]);
+    getAgentConfigs(agentMode)
+      .then((res) => setAgentConfigs((res?.items?.length ? res.items : FALLBACK_AGENT_CONFIGS[agentMode])))
+      .catch(() => setAgentConfigs(FALLBACK_AGENT_CONFIGS[agentMode]));
   }, [agentMode]);
 
   const execute = async () => {
@@ -37,22 +56,38 @@ export function DashboardPage() {
   const messages = currentSession?.messages || [];
 
   return (
-    <div className="dashboard-grid">
-      <div className="left-col">
-        <QueryInputForm title={title} query={query} setTitle={setTitle} setQuery={setQuery} />
-        <RunModeSelector agentMode={agentMode} decisionMode={decisionMode} consensusRule={consensusRule} setAgentMode={setAgentMode} setDecisionMode={setDecisionMode} setConsensusRule={setConsensusRule} />
-        <div className="panel control-bar">
-          <button onClick={execute} disabled={loading || !query.trim()}>{loading ? 'Running...' : 'Execute'}</button>
-        </div>
-      </div>
+    <div className="dashboard-grid main-expanded">
       <div className="center-col">
-        <CoreDecisionPanel result={currentSession?.session?.final_result || currentSession?.result?.final_result} summary={currentSession?.session?.final_summary || currentSession?.result?.final_summary} status={currentSession?.session?.status || currentSession?.result?.status} />
-        <div className="agent-grid">
-          {agentConfigs.map((item) => (
-            <AgentNodeCard key={item.agent_name} name={item.agent_name} item={item} message={messages.find((m: any) => m.agent_name === item.agent_name)} />
-          ))}
-        </div>
-        <VoteMatrix messages={messages} />
+        <section className={`panel magi-stage ${agentMode === 'THREE' ? 'triangle' : 'pentagon'}`}>
+          <div className="core-slot">
+            <CoreDecisionPanel result={currentSession?.session?.final_result || currentSession?.result?.final_result} summary={currentSession?.session?.final_summary || currentSession?.result?.final_summary} status={currentSession?.session?.status || currentSession?.result?.status} />
+          </div>
+          <div className="agent-grid">
+            {agentConfigs.map((item, index) => (
+              <AgentNodeCard key={item.agent_name} index={index} name={item.agent_name} item={item} message={messages.find((m: any) => m.agent_name === item.agent_name)} />
+            ))}
+          </div>
+        </section>
+        <section className="panel prompt-composer">
+          <input
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder={t.decisionTitle}
+            className="prompt-title"
+          />
+          <div className="prompt-row">
+            <textarea
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              rows={3}
+              placeholder={t.describeAgenda}
+              className="prompt-input"
+            />
+            <button className="prompt-send" onClick={execute} disabled={loading || !query.trim()}>
+              {loading ? t.running : t.execute}
+            </button>
+          </div>
+        </section>
       </div>
       <div className="right-col">
         <DebateLogPanel messages={messages} />

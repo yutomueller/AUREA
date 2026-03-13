@@ -4,18 +4,21 @@ import { SettingsPage } from '../pages/SettingsPage';
 import { HistoryPage } from '../pages/HistoryPage';
 import { SessionDetailPage } from '../pages/SessionDetailPage';
 import { SystemPage } from '../pages/SystemPage';
+import { useI18n } from '../i18n';
 
 export function AppRouter() {
+  const t = useI18n();
+
   return (
     <BrowserRouter>
       <div className="shell">
         <header className="topbar">
           <div className="brand">AUREA</div>
           <nav className="nav">
-            <NavLink to="/">Dashboard</NavLink>
-            <NavLink to="/settings">Settings</NavLink>
-            <NavLink to="/history">History</NavLink>
-            <NavLink to="/system">System</NavLink>
+            <NavLink to="/">{t.dashboard}</NavLink>
+            <NavLink to="/settings">{t.settings}</NavLink>
+            <NavLink to="/history">{t.history}</NavLink>
+            <NavLink to="/system">{t.system}</NavLink>
           </nav>
         </header>
         <Routes>
