@@ -149,7 +149,6 @@ button:hover { border-color: rgba(88,255,213,.65); box-shadow: 0 0 14px rgba(75,
 .agent-name { font-weight: 800; letter-spacing: .1em; }
 .agent-role, .agent-meta { color: var(--muted); font-size: 12px; }
 .agent-vote { margin-top: 10px; font-size: 18px; }
-.agent-summary { margin-top: 10px; font-size: 13px; color: var(--text); opacity: .9; }
 .logs { max-height: calc(100vh - 160px); overflow:auto; padding: 14px; }
 .log-list { display:grid; gap:8px; }
 .log-item { border:1px solid rgba(75,227,255,.16); border-radius: 12px; padding:8px 10px; background: rgba(6,10,16,.72); }
