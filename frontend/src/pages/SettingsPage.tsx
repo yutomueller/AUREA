@@ -16,6 +16,8 @@ export function SettingsPage() {
   const [providers, setProviders] = useState<any[]>([]);
   const uiLanguage = useSettingsStore((s) => s.uiLanguage);
   const responseLanguage = useSettingsStore((s) => s.responseLanguage);
+  const requestTimeoutSeconds = useSettingsStore((s) => s.requestTimeoutSeconds);
+  const setRequestTimeoutSeconds = useSettingsStore((s) => s.setRequestTimeoutSeconds);
   const hydrate = useSettingsStore((s) => s.hydrate);
   const agentMode = useSettingsStore((s) => s.agentMode);
   const decisionMode = useSettingsStore((s) => s.decisionMode);
@@ -34,7 +36,15 @@ export function SettingsPage() {
   }, [hydrate]);
 
   const saveLanguages = async () => {
-    await saveUiSettings({ theme_name: 'aurea', animation_level: 'MEDIUM', sound_enabled: false, density: 'NORMAL', ui_language: uiLanguage, response_language: responseLanguage });
+    await saveUiSettings({
+      theme_name: 'aurea',
+      animation_level: 'MEDIUM',
+      sound_enabled: false,
+      density: 'NORMAL',
+      ui_language: uiLanguage,
+      response_language: responseLanguage,
+      request_timeout_seconds: requestTimeoutSeconds,
+    });
   };
 
   return (
@@ -42,6 +52,20 @@ export function SettingsPage() {
       <div className="panel">
         <h2>{t.language}</h2>
         <LanguageSwitcher onSave={saveLanguages} />
+      </div>
+      <div className="panel">
+        <h2>{t.requestTimeout}</h2>
+        <label>
+          {t.requestTimeout}
+          <input
+            type="number"
+            min={5}
+            max={600}
+            value={requestTimeoutSeconds}
+            onChange={(e) => setRequestTimeoutSeconds(Number(e.target.value || 60))}
+          />
+        </label>
+        <button onClick={saveLanguages}>{t.save}</button>
       </div>
       <div className="panel">
         <h2>{t.agentMode}</h2>

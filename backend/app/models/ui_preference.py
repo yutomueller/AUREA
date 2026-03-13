@@ -13,5 +13,6 @@ class UiPreferenceRecord(SQLModel, table=True):
     density: str = 'NORMAL'
     ui_language: str = 'ja'
     response_language: str = 'ja'
+    request_timeout_seconds: int = 60
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)

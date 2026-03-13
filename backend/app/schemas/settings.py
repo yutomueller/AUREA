@@ -1,5 +1,5 @@
 from typing import Any, List, Dict
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class UiPreferenceRequest(BaseModel):
@@ -9,6 +9,7 @@ class UiPreferenceRequest(BaseModel):
     density: str = 'NORMAL'
     ui_language: str = 'ja'
     response_language: str = 'ja'
+    request_timeout_seconds: int = Field(60, ge=5, le=600)
 
 
 class UiPreferenceResponse(UiPreferenceRequest):

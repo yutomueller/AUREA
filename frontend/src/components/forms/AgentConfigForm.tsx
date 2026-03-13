@@ -3,6 +3,12 @@ type Props = {
   onChange: (next: any) => void;
 };
 
+const PROVIDER_OPTIONS = [
+  { value: 'openrouter', label: 'OpenRouter (default)' },
+  { value: 'ollama', label: 'Ollama (local)' },
+  { value: 'lmstudio', label: 'LM Studio (local)' },
+];
+
 export function AgentConfigForm({ item, onChange }: Props) {
   return (
     <div className="panel form-grid">
@@ -21,7 +27,11 @@ export function AgentConfigForm({ item, onChange }: Props) {
       </label>
       <label>
         Provider
-        <input value={item.provider_key} onChange={(e) => onChange({ ...item, provider_key: e.target.value })} />
+        <select value={item.provider_key} onChange={(e) => onChange({ ...item, provider_key: e.target.value })}>
+          {PROVIDER_OPTIONS.map((option) => (
+            <option key={option.value} value={option.value}>{option.label}</option>
+          ))}
+        </select>
       </label>
       <label>
         Model
