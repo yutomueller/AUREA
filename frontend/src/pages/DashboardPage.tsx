@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { CoreDecisionPanel } from '../components/magi/CoreDecisionPanel';
 import { DebateLogPanel } from '../components/magi/DebateLogPanel';
+import { ResponsePanels } from '../components/magi/ResponsePanels';
 import { AgentNodeCard } from '../components/magi/AgentNodeCard';
 import { createSession, runSession } from '../services/sessions';
 import { getAgentConfigs } from '../services/agents';
@@ -11,16 +12,16 @@ import { useI18n } from '../i18n';
 
 const FALLBACK_AGENT_CONFIGS: Record<'THREE' | 'FIVE', Array<{ agent_name: string; role_label: string; provider_key: string; model_name: string }>> = {
   THREE: [
-    { agent_name: 'MELCHIOR', role_label: 'Logic', provider_key: 'core', model_name: 'AUREA-01' },
-    { agent_name: 'BALTHASAR', role_label: 'Emotion', provider_key: 'core', model_name: 'AUREA-02' },
-    { agent_name: 'CASPER', role_label: 'Instinct', provider_key: 'core', model_name: 'AUREA-03' },
+    { agent_name: 'VERGILIUS', role_label: 'Strategy', provider_key: 'openrouter', model_name: 'openai/gpt-4o-mini' },
+    { agent_name: 'HORATIUS', role_label: 'Ethics', provider_key: 'openrouter', model_name: 'openai/gpt-4o-mini' },
+    { agent_name: 'OVIDIUS', role_label: 'Intuition', provider_key: 'openrouter', model_name: 'openai/gpt-4o-mini' },
   ],
   FIVE: [
-    { agent_name: 'MELCHIOR', role_label: 'Logic', provider_key: 'core', model_name: 'AUREA-01' },
-    { agent_name: 'BALTHASAR', role_label: 'Emotion', provider_key: 'core', model_name: 'AUREA-02' },
-    { agent_name: 'CASPER', role_label: 'Instinct', provider_key: 'core', model_name: 'AUREA-03' },
-    { agent_name: 'RAPHAEL', role_label: 'Risk', provider_key: 'core', model_name: 'AUREA-04' },
-    { agent_name: 'URIEL', role_label: 'Ethics', provider_key: 'core', model_name: 'AUREA-05' },
+    { agent_name: 'VERGILIUS', role_label: 'Strategy', provider_key: 'openrouter', model_name: 'openai/gpt-4o-mini' },
+    { agent_name: 'HORATIUS', role_label: 'Ethics', provider_key: 'openrouter', model_name: 'openai/gpt-4o-mini' },
+    { agent_name: 'OVIDIUS', role_label: 'Intuition', provider_key: 'openrouter', model_name: 'openai/gpt-4o-mini' },
+    { agent_name: 'LUCRETIUS', role_label: 'Analysis', provider_key: 'openrouter', model_name: 'openai/gpt-4o-mini' },
+    { agent_name: 'CATULLUS', role_label: 'Emotion', provider_key: 'openrouter', model_name: 'openai/gpt-4o-mini' },
   ],
 };
 
@@ -41,6 +42,12 @@ export function DashboardPage() {
       .catch(() => setAgentConfigs(FALLBACK_AGENT_CONFIGS[agentMode]));
   }, [agentMode]);
 
+  const resetToStart = () => {
+    setTitle('');
+    setQuery('');
+    setCurrentSession(null);
+  };
+
   const execute = async () => {
     setLoading(true);
     try {
@@ -60,7 +67,7 @@ export function DashboardPage() {
       <div className="center-col">
         <section className={`panel magi-stage ${agentMode === 'THREE' ? 'triangle' : 'pentagon'}`}>
           <div className="core-slot">
-            <CoreDecisionPanel result={currentSession?.session?.final_result || currentSession?.result?.final_result} summary={currentSession?.session?.final_summary || currentSession?.result?.final_summary} status={currentSession?.session?.status || currentSession?.result?.status} />
+            <CoreDecisionPanel result={currentSession?.session?.final_result || currentSession?.result?.final_result} status={currentSession?.session?.status || currentSession?.result?.status} />
           </div>
           <div className="agent-grid">
             {agentConfigs.map((item, index) => (
@@ -75,6 +82,11 @@ export function DashboardPage() {
             placeholder={t.decisionTitle}
             className="prompt-title"
           />
+          <div className="prompt-actions">
+            <button className="prompt-reset" onClick={resetToStart}>
+              {t.resetHome}
+            </button>
+          </div>
           <div className="prompt-row">
             <textarea
               value={query}
@@ -90,6 +102,7 @@ export function DashboardPage() {
         </section>
       </div>
       <div className="right-col">
+        <ResponsePanels messages={messages} />
         <DebateLogPanel messages={messages} />
       </div>
     </div>

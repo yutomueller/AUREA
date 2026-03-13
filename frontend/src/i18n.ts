@@ -27,6 +27,7 @@ const dict = {
     execute: '実行',
     voteMatrix: '投票マトリクス',
     debateLog: '議論ログ',
+    responses: '各エージェント返答',
     agent: 'エージェント',
     round: 'ラウンド',
     phase: 'フェーズ',
@@ -46,6 +47,8 @@ const dict = {
     saveAgents: 'エージェント設定を保存',
     providers: 'プロバイダ',
     save: '保存',
+    resetHome: '初期画面に戻す',
+    requestTimeout: 'リクエストタイムアウト(秒)',
   },
   en: {
     dashboard: 'Dashboard',
@@ -72,6 +75,7 @@ const dict = {
     execute: 'Execute',
     voteMatrix: 'Vote Matrix',
     debateLog: 'Debate Log',
+    responses: 'Agent Responses',
     agent: 'Agent',
     round: 'Round',
     phase: 'Phase',
@@ -91,6 +95,8 @@ const dict = {
     saveAgents: 'Save agents',
     providers: 'Providers',
     save: 'Save',
+    resetHome: 'Back to start',
+    requestTimeout: 'Request timeout (sec)',
   },
 } as const;
 
