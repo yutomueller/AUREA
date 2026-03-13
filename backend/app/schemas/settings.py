@@ -9,7 +9,7 @@ class UiPreferenceRequest(BaseModel):
     density: str = 'NORMAL'
     ui_language: str = 'ja'
     response_language: str = 'ja'
-    request_timeout_seconds: int = Field(60, ge=5, le=600)
+    request_timeout_seconds: int = Field(120, ge=0, le=600)
 
 
 class UiPreferenceResponse(UiPreferenceRequest):
