@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session
 
 from app.core.database import get_session
@@ -18,12 +18,18 @@ def get_providers(session: Session = Depends(get_session)):
 
 @router.put('/providers/config', response_model=ProviderConfigResponse)
 def save_provider(payload: ProviderConfigRequest, session: Session = Depends(get_session)) -> ProviderConfigResponse:
-    saved = save_provider_config(session, payload)
+    try:
+        saved = save_provider_config(session, payload)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
     return ProviderConfigResponse(provider_key=saved.provider_key, saved=True)
 
 
 @router.post('/providers/test', response_model=ProviderTestResponse)
 async def test_provider(payload: ProviderTestRequest) -> ProviderTestResponse:
-    provider = build_provider_from_request(payload)
+    try:
+        provider = build_provider_from_request(payload)
+    except KeyError as exc:
+        raise HTTPException(status_code=400, detail=f'Unsupported provider: {payload.provider_key}') from exc
     result = await provider.test_connection()
     return ProviderTestResponse(provider_key=payload.provider_key, success=result[0], message=result[1])
