@@ -27,7 +27,7 @@ def _provider_error_content(exc: Exception) -> str:
     return f"[ERROR]\nProvider call failed: {type(exc).__name__}: {exc}\n[VOTE]\nREJECT\n[CONFIDENCE]\n0"
 
 
-async def run_simple(session: Session, session_id: str):
+async def run_simple(session: Session, session_id: str, finalize: bool = True):
     record = get_session_record(session, session_id)
     prefs = get_ui_preferences(session)
     agent_configs = get_agent_configs_by_mode(session, record.agent_mode)
@@ -74,6 +74,9 @@ async def run_simple(session: Session, session_id: str):
 
     results = dict(await asyncio.gather(*[run_one(agent) for agent in agent_configs], return_exceptions=False))
     votes = {k: v['vote'] for k, v in results.items()}
+    if not finalize:
+        return record, votes, 1
+
     final_result = resolve_final_result(votes, record.agent_mode, record.consensus_rule)
     record.status = 'COMPLETED'
     record.final_result = final_result
@@ -84,8 +87,14 @@ async def run_simple(session: Session, session_id: str):
 
 
 async def run_debate(session: Session, session_id: str):
-    record, votes, _ = await run_simple(session, session_id)
+    record, votes, _ = await run_simple(session, session_id, finalize=False)
     if len(set(votes.values())) == 1:
+        final_result = resolve_final_result(votes, record.agent_mode, record.consensus_rule)
+        record.status = 'COMPLETED'
+        record.final_result = final_result
+        record.completed_at = datetime.utcnow()
+        record.final_summary = build_final_summary(votes, final_result, record.agent_mode, record.consensus_rule)
+        save_session(session, record)
         return record, votes, 1
     record.status = 'DEBATING'
     save_session(session, record)
