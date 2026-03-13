@@ -1,4 +1,4 @@
-\# AUREA
+# AUREA
 
 
 
@@ -6,49 +6,49 @@ MAGI-style multi-agent AI decision system.
 
 
 
-\## Features
+## Features
 
 
 
-\- 3 / 5 agent decision system
+- 3 / 5 agent decision system
 
-\- debate mode
+- debate mode
 
-\- multi LLM support
+- multi LLM support
 
-\- OpenAI
+- OpenAI
 
-\- Anthropic
+- Anthropic
 
-\- Google
+- Google
 
-\- OpenRouter
+- OpenRouter
 
-\- Ollama
+- Ollama
 
-\- LM Studio
+- LM Studio
 
 
 
-\## Stack
+## Stack
 
 
 
 Backend
 
-\- FastAPI
+- FastAPI
 
-\- LangGraph
+- LangGraph
 
-\- SQLite
+- SQLite
 
 
 
 Frontend
 
-\- React
+- React
 
-\- TypeScript
+- TypeScript
 
 \- Vite
 
