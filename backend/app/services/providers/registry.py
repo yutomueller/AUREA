@@ -1,23 +1,16 @@
-from sqlmodel import Session
-
 from app.core.security import decrypt_value
 from app.models.provider_config import ProviderConfigRecord
 from app.schemas.provider import ProviderTestRequest
-from app.services.providers.openai_adapter import OpenAIAdapter
+from app.services.providers.constants import DEFAULT_LOCAL_MODEL, DEFAULT_OPENROUTER_MODEL
 from app.services.providers.openrouter_adapter import OpenRouterAdapter
 from app.services.providers.ollama_adapter import OllamaAdapter
 from app.services.providers.lmstudio_adapter import LMStudioAdapter
-from app.services.providers.anthropic_adapter import AnthropicAdapter
-from app.services.providers.google_adapter import GoogleAdapter
 
 
 PROVIDER_MAP = {
-    'openai': OpenAIAdapter,
     'openrouter': OpenRouterAdapter,
     'ollama': OllamaAdapter,
     'lmstudio': LMStudioAdapter,
-    'anthropic': AnthropicAdapter,
-    'google': GoogleAdapter,
 }
 
 
@@ -32,11 +25,8 @@ def build_provider_from_record(record: ProviderConfigRecord, model_name: str, ma
 
 def build_provider_from_request(payload: ProviderTestRequest):
     default_model = {
-        'openai': 'gpt-4o-mini',
-        'openrouter': 'openai/gpt-4o-mini',
-        'ollama': 'llama3.2',
+        'openrouter': DEFAULT_OPENROUTER_MODEL,
+        'ollama': DEFAULT_LOCAL_MODEL,
         'lmstudio': 'local-model',
-        'anthropic': 'claude-3-5-sonnet-latest',
-        'google': 'gemini-2.0-flash',
-    }.get(payload.provider_key, 'gpt-4o-mini')
+    }.get(payload.provider_key, DEFAULT_OPENROUTER_MODEL)
     return build_provider(payload.provider_key, default_model, payload.api_key, payload.base_url, 128)
