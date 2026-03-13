@@ -1,12 +1,16 @@
+import { useI18n } from '../../i18n';
+
 type Props = { messages: any[] };
 
 export function VoteMatrix({ messages }: Props) {
+  const t = useI18n();
+
   return (
     <div className="panel">
-      <h3>Vote Matrix</h3>
+      <h3>{t.voteMatrix}</h3>
       <table className="table">
         <thead>
-          <tr><th>Agent</th><th>Round</th><th>Phase</th><th>Vote</th><th>Confidence</th></tr>
+          <tr><th>{t.agent}</th><th>{t.round}</th><th>{t.phase}</th><th>{t.vote}</th><th>{t.confidence}</th></tr>
         </thead>
         <tbody>
           {messages.map((m) => (

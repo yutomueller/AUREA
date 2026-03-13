@@ -1,3 +1,5 @@
+import { useI18n } from '../../i18n';
+
 type Props = {
   title: string;
   query: string;
@@ -6,15 +8,17 @@ type Props = {
 };
 
 export function QueryInputForm({ title, query, setTitle, setQuery }: Props) {
+  const t = useI18n();
+
   return (
     <div className="panel form-grid">
       <label>
-        Title
-        <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Decision title" />
+        {t.title}
+        <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder={t.decisionTitle} />
       </label>
       <label>
-        Query
-        <textarea value={query} onChange={(e) => setQuery(e.target.value)} rows={8} placeholder="Describe the agenda..." />
+        {t.query}
+        <textarea value={query} onChange={(e) => setQuery(e.target.value)} rows={8} placeholder={t.describeAgenda} />
       </label>
     </div>
   );

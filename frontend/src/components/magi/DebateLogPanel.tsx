@@ -1,9 +1,13 @@
+import { useI18n } from '../../i18n';
+
 type Props = { messages: any[] };
 
 export function DebateLogPanel({ messages }: Props) {
+  const t = useI18n();
+
   return (
     <div className="panel logs">
-      <h3>Debate Log</h3>
+      <h3>{t.debateLog}</h3>
       <div className="log-list">
         {messages.map((m) => (
           <div className="log-item" key={m.id}>

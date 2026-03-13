@@ -6,8 +6,10 @@ import { getAgentConfigs, saveAgentConfigs } from '../services/agents';
 import { getProviders, saveProvider, testProvider } from '../services/providers';
 import { getUiSettings, saveUiSettings } from '../services/settings';
 import { useSettingsStore } from '../store/useSettingsStore';
+import { useI18n } from '../i18n';
 
 export function SettingsPage() {
+  const t = useI18n();
   const [mode, setMode] = useState<'THREE' | 'FIVE'>('THREE');
   const [agents, setAgents] = useState<any[]>([]);
   const [providers, setProviders] = useState<any[]>([]);
@@ -29,25 +31,25 @@ export function SettingsPage() {
   return (
     <div className="settings-grid">
       <div className="panel">
-        <h2>Language</h2>
+        <h2>{t.language}</h2>
         <LanguageSwitcher onSave={saveLanguages} />
       </div>
       <div className="panel">
-        <h2>Agent Mode</h2>
+        <h2>{t.agentMode}</h2>
         <select value={mode} onChange={(e) => setMode(e.target.value as 'THREE' | 'FIVE')}>
-          <option value="THREE">Three Agents</option>
-          <option value="FIVE">Five Agents</option>
+          <option value="THREE">{t.threeAgents}</option>
+          <option value="FIVE">{t.fiveAgents}</option>
         </select>
       </div>
       <div className="panel">
-        <h2>Agents</h2>
+        <h2>{t.agents}</h2>
         {agents.map((item, index) => (
           <AgentConfigForm key={item.agent_name} item={item} onChange={(next) => setAgents((curr) => curr.map((it, i) => i === index ? next : it))} />
         ))}
-        <button onClick={() => saveAgentConfigs({ mode_group: mode, items: agents })}>Save agents</button>
+        <button onClick={() => saveAgentConfigs({ mode_group: mode, items: agents })}>{t.saveAgents}</button>
       </div>
       <div className="panel">
-        <h2>Providers</h2>
+        <h2>{t.providers}</h2>
         {providers.map((item: any, index: number) => (
           <ProviderConfigForm
             key={item.provider_key}
@@ -57,7 +59,7 @@ export function SettingsPage() {
           />
         ))}
         {providers.map((item: any) => (
-          <button key={`${item.provider_key}-save`} onClick={() => saveProvider(item)}>Save {item.provider_key}</button>
+          <button key={`${item.provider_key}-save`} onClick={() => saveProvider(item)}>{t.save} {item.provider_key}</button>
         ))}
       </div>
     </div>

@@ -48,3 +48,40 @@ button { cursor:pointer; background: linear-gradient(180deg, rgba(18,48,67,.95),
 .badge { display:inline-flex; padding:4px 8px; border-radius: 999px; border:1px solid var(--line); }
 .control-bar { display:flex; gap:12px; }
 pre.panel { white-space: pre-wrap; overflow:auto; }
+
+
+.agent-grid.triangle,
+.agent-grid.pentagon {
+  position: relative;
+  min-height: 520px;
+}
+.agent-grid.triangle .agent-card,
+.agent-grid.pentagon .agent-card {
+  position: absolute;
+  width: min(220px, 42vw);
+}
+.agent-grid.triangle .agent-card:nth-child(1) { top: 8px; left: 50%; transform: translateX(-50%); }
+.agent-grid.triangle .agent-card:nth-child(2) { bottom: 16px; left: 8%; }
+.agent-grid.triangle .agent-card:nth-child(3) { bottom: 16px; right: 8%; }
+
+.agent-grid.pentagon .agent-card:nth-child(1) { top: 6px; left: 50%; transform: translateX(-50%); }
+.agent-grid.pentagon .agent-card:nth-child(2) { top: 160px; right: 8%; }
+.agent-grid.pentagon .agent-card:nth-child(3) { bottom: 18px; right: 18%; }
+.agent-grid.pentagon .agent-card:nth-child(4) { bottom: 18px; left: 18%; }
+.agent-grid.pentagon .agent-card:nth-child(5) { top: 160px; left: 8%; }
+
+@media (max-width: 1200px) {
+  .agent-grid.triangle,
+  .agent-grid.pentagon {
+    position: static;
+    min-height: initial;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+
+  .agent-grid.triangle .agent-card,
+  .agent-grid.pentagon .agent-card {
+    position: static;
+    width: auto;
+    transform: none;
+  }
+}
