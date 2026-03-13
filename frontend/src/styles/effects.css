@@ -1,0 +1,27 @@
+.core {
+  position: relative;
+  overflow: hidden;
+}
+.core::before {
+  content: '';
+  position: absolute;
+  inset: 15% 28%;
+  border: 1px solid rgba(75,227,255,.25);
+  border-radius: 24px;
+  box-shadow: 0 0 30px rgba(75,227,255,.18), inset 0 0 30px rgba(75,227,255,.08);
+}
+.core.completed .core-result { color: var(--teal); }
+.core.failed .core-result { color: var(--crimson); }
+.agent-card, .panel, button {
+  transition: all .2s ease;
+}
+.agent-card:hover, .panel:hover { transform: translateY(-1px); }
+.connection-lines {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(75,227,255,.7), transparent);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: .3; }
+  50% { opacity: 1; }
+}
