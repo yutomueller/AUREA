@@ -5,6 +5,7 @@ from sqlmodel import Session, select
 from app.core.security import encrypt_value, mask_value
 from app.models.provider_config import ProviderConfigRecord
 from app.schemas.provider import ProviderConfigRequest
+from app.services.providers.constants import SUPPORTED_PROVIDER_KEYS
 
 
 def list_provider_configs(session: Session) -> List[ProviderConfigRecord]:
@@ -13,6 +14,9 @@ def list_provider_configs(session: Session) -> List[ProviderConfigRecord]:
 
 
 def save_provider_config(session: Session, payload: ProviderConfigRequest) -> ProviderConfigRecord:
+    if payload.provider_key not in SUPPORTED_PROVIDER_KEYS:
+        raise ValueError(f'Unsupported provider: {payload.provider_key}')
+
     row = session.exec(select(ProviderConfigRecord).where(ProviderConfigRecord.provider_key == payload.provider_key)).first()
     if row is None:
         row = ProviderConfigRecord(
