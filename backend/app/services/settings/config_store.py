@@ -29,6 +29,18 @@ def _load_first_pref_row(session: Session) -> UiPreferenceRecord | None:
         raise
 
 
+def _ensure_timeout_column(session: Session) -> None:
+    try:
+        rows = session.exec("PRAGMA table_info('ui_preferences')").all()
+    except Exception:
+        return
+    col_names = {row[1] for row in rows if len(row) > 1}
+    if 'request_timeout_seconds' not in col_names:
+        session.exec("ALTER TABLE ui_preferences ADD COLUMN request_timeout_seconds INTEGER DEFAULT 60")
+        session.commit()
+
+
+
 def get_ui_preferences(session: Session) -> UiPreferenceResponse:
     row = _load_first_pref_row(session)
     if row is None:
