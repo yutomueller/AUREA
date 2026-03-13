@@ -47,6 +47,8 @@ const dict = {
     saveAgents: 'エージェント設定を保存',
     providers: 'プロバイダ',
     save: '保存',
+    resetHome: '初期画面に戻す',
+    requestTimeout: 'リクエストタイムアウト(秒)',
   },
   en: {
     dashboard: 'Dashboard',
@@ -93,6 +95,8 @@ const dict = {
     saveAgents: 'Save agents',
     providers: 'Providers',
     save: 'Save',
+    resetHome: 'Back to start',
+    requestTimeout: 'Request timeout (sec)',
   },
 } as const;
 

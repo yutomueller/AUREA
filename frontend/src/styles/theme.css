@@ -205,6 +205,17 @@ pre.panel { white-space: pre-wrap; overflow:auto; }
   font-size: 13px;
   letter-spacing: .03em;
 }
+.prompt-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+.prompt-reset {
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  border-color: rgba(255,255,255,.25);
+}
 .prompt-row {
   display: grid;
   grid-template-columns: 1fr auto;
@@ -294,6 +305,8 @@ pre.panel { white-space: pre-wrap; overflow:auto; }
     inset: auto;
   }
   .logs { max-height: 520px; }
+  .prompt-actions { justify-content: stretch; }
+  .prompt-reset { width: 100%; }
   .prompt-row { grid-template-columns: 1fr; }
   .prompt-send { width: 100%; }
 }

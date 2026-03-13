@@ -42,6 +42,12 @@ export function DashboardPage() {
       .catch(() => setAgentConfigs(FALLBACK_AGENT_CONFIGS[agentMode]));
   }, [agentMode]);
 
+  const resetToStart = () => {
+    setTitle('');
+    setQuery('');
+    setCurrentSession(null);
+  };
+
   const execute = async () => {
     setLoading(true);
     try {
@@ -76,6 +82,11 @@ export function DashboardPage() {
             placeholder={t.decisionTitle}
             className="prompt-title"
           />
+          <div className="prompt-actions">
+            <button className="prompt-reset" onClick={resetToStart}>
+              {t.resetHome}
+            </button>
+          </div>
           <div className="prompt-row">
             <textarea
               value={query}

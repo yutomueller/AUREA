@@ -27,7 +27,7 @@ class OpenAIAdapter(BaseProviderAdapter):
 
     async def generate(self, messages):
         start = perf_counter()
-        async with httpx.AsyncClient(timeout=60) as client:
+        async with httpx.AsyncClient(timeout=self.timeout_seconds) as client:
             response = await client.post(
                 (self.base_url or 'https://api.openai.com/v1') + '/chat/completions',
                 headers={'Authorization': f'Bearer {self.api_key}'},
