@@ -4,6 +4,27 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AUREA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              aurora: {
+                900: '#050a12',
+                800: '#0a1628',
+                700: '#132945',
+                500: '#4be3ff',
+                400: '#58ffd5',
+              },
+            },
+            boxShadow: {
+              neon: '0 0 30px rgba(75, 227, 255, 0.25)',
+            },
+          },
+        },
+      };
+    </script>
   </head>
   <body>
     <div id="root"></div>
