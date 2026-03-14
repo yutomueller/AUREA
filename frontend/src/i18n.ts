@@ -49,6 +49,7 @@ const dict = {
     save: '保存',
     resetHome: '初期画面に戻す',
     requestTimeout: 'リクエストタイムアウト(秒)',
+    saveCompleted: '保存が完了しました',
   },
   en: {
     dashboard: 'Dashboard',
@@ -97,6 +98,7 @@ const dict = {
     save: 'Save',
     resetHome: 'Back to start',
     requestTimeout: 'Request timeout (sec)',
+    saveCompleted: 'Saved successfully',
   },
 } as const;
 
