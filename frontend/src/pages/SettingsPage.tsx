@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AgentConfigForm } from '../components/forms/AgentConfigForm';
 import { ProviderConfigForm } from '../components/forms/ProviderConfigForm';
 import { LanguageSwitcher } from '../components/common/LanguageSwitcher';
@@ -36,6 +36,7 @@ export function SettingsPage() {
   const [agents, setAgents] = useState<any[]>([]);
   const [providers, setProviders] = useState<any[]>([]);
   const [saveNotice, setSaveNotice] = useState<{ id: number; message: string } | null>(null);
+  const noticeSeqRef = useRef(0);
   const uiLanguage = useSettingsStore((s) => s.uiLanguage);
   const responseLanguage = useSettingsStore((s) => s.responseLanguage);
   const requestTimeoutSeconds = useSettingsStore((s) => s.requestTimeoutSeconds);
@@ -82,7 +83,10 @@ export function SettingsPage() {
     return () => window.clearTimeout(timer);
   }, [saveNotice]);
 
-  const showSaveNotice = () => setSaveNotice({ id: Date.now(), message: t.saveCompleted });
+  const showSaveNotice = () => {
+    noticeSeqRef.current += 1;
+    setSaveNotice({ id: noticeSeqRef.current, message: t.saveCompleted });
+  };
 
   const saveLanguages = async () => {
     await saveUiSettings({
