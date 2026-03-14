@@ -8,7 +8,7 @@ export function CoreDecisionPanel({ result, status, isRunning = false }: Props) 
   const resolvedResult = isRunning ? 'RUNNING' : (result || t.pending);
 
   return (
-    <div className={`panel core ${status?.toLowerCase()} ${isRunning ? 'animate-pulse' : ''}`}>
+    <div className={`panel core ${status?.toLowerCase()} ${isRunning ? 'is-running' : ''}`}>
       <div className="core-title">AUREA CORE</div>
       <div className="core-result">{resolvedResult}</div>
       <div className="core-status">{resolvedStatus}</div>

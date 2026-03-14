@@ -1,33 +1,39 @@
 import { useMemo } from 'react';
 import { useI18n } from '../../i18n';
+import { compareMessages, getAgentAccentMap, getLatestMessagesByAgent, type SessionMessage } from './messageUtils';
 
-type Props = { messages: any[] };
+type Props = { messages: SessionMessage[] };
 
 export function ResponsePanels({ messages }: Props) {
   const t = useI18n();
 
-  const latestByAgent = useMemo(() => {
-    const map = new Map<string, any>();
-    messages.forEach((message) => {
-      map.set(message.agent_name, message);
-    });
-    return Array.from(map.values());
-  }, [messages]);
+  const latestByAgent = useMemo(() => getLatestMessagesByAgent(messages), [messages]);
+
+  const latestMessages = useMemo(() => {
+    return Array.from(latestByAgent.values()).sort(compareMessages);
+  }, [latestByAgent]);
+
+  const accentByAgent = useMemo(() => {
+    return getAgentAccentMap(latestMessages.map((message) => message.agent_name));
+  }, [latestMessages]);
 
   return (
     <div className="panel response-panels">
       <h3>{t.responses}</h3>
       <div className="response-panel-list">
-        {latestByAgent.map((m) => (
-          <article className="response-panel-item" key={`${m.agent_name}-${m.phase}-${m.id}`}>
-            <header className="response-panel-head">
-              <strong>{m.agent_name}</strong>
-              <span>{m.phase} · {m.vote || '—'}</span>
-            </header>
-            <p className="response-panel-body">{m.content || t.noOutput}</p>
-          </article>
-        ))}
-        {latestByAgent.length === 0 && <p className="muted">{t.awaiting}</p>}
+        {latestMessages.map((message) => {
+          const accentClass = accentByAgent.get(message.agent_name) ?? 'accent-1';
+          return (
+            <article className={`response-panel-item ${accentClass}`} key={`${message.agent_name}-${message.phase}-${message.id}`}>
+              <header className="response-panel-head">
+                <strong>{message.agent_name}</strong>
+                <span>{message.phase} · {message.vote || '—'}</span>
+              </header>
+              <p className="response-panel-body">{message.content || t.noOutput}</p>
+            </article>
+          );
+        })}
+        {latestMessages.length === 0 && <p className="muted">{t.awaiting}</p>}
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { CoreDecisionPanel } from '../components/magi/CoreDecisionPanel';
 import { DebateLogPanel } from '../components/magi/DebateLogPanel';
 import { ResponsePanels } from '../components/magi/ResponsePanels';
@@ -8,6 +8,7 @@ import { getAgentConfigs } from '../services/agents';
 import { useSessionStore } from '../store/useSessionStore';
 import { useSettingsStore } from '../store/useSettingsStore';
 import { useI18n } from '../i18n';
+import { getLatestMessagesByAgent } from '../components/magi/messageUtils';
 
 const FALLBACK_AGENT_CONFIGS: Record<'THREE' | 'FIVE', Array<{ agent_name: string; role_label: string; provider_key: string; model_name: string }>> = {
   THREE: [
@@ -60,6 +61,7 @@ export function DashboardPage() {
   };
 
   const messages = currentSession?.messages || [];
+  const latestByAgent = useMemo(() => getLatestMessagesByAgent(messages), [messages]);
 
   return (
     <div className="dashboard-grid main-expanded">
@@ -76,7 +78,14 @@ export function DashboardPage() {
           </div>
           <div className="agent-grid">
             {agentConfigs.map((item, index) => (
-              <AgentNodeCard key={item.agent_name} index={index} name={item.agent_name} item={item} message={messages.find((m: any) => m.agent_name === item.agent_name)} />
+              <AgentNodeCard
+                key={item.agent_name}
+                index={index}
+                name={item.agent_name}
+                item={item}
+                message={latestByAgent.get(item.agent_name)}
+                isRunning={loading}
+              />
             ))}
           </div>
         </section>
