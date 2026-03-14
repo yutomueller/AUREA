@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AgentConfigForm } from '../components/forms/AgentConfigForm';
 import { ProviderConfigForm } from '../components/forms/ProviderConfigForm';
 import { LanguageSwitcher } from '../components/common/LanguageSwitcher';
@@ -35,6 +35,8 @@ export function SettingsPage() {
   const [mode, setMode] = useState<'THREE' | 'FIVE'>('THREE');
   const [agents, setAgents] = useState<any[]>([]);
   const [providers, setProviders] = useState<any[]>([]);
+  const [saveNotice, setSaveNotice] = useState<{ id: number; message: string } | null>(null);
+  const noticeSeqRef = useRef(0);
   const uiLanguage = useSettingsStore((s) => s.uiLanguage);
   const responseLanguage = useSettingsStore((s) => s.responseLanguage);
   const requestTimeoutSeconds = useSettingsStore((s) => s.requestTimeoutSeconds);
@@ -73,6 +75,19 @@ export function SettingsPage() {
       });
   }, [hydrate]);
 
+  useEffect(() => {
+    if (!saveNotice) {
+      return;
+    }
+    const timer = window.setTimeout(() => setSaveNotice(null), 2400);
+    return () => window.clearTimeout(timer);
+  }, [saveNotice]);
+
+  const showSaveNotice = () => {
+    noticeSeqRef.current += 1;
+    setSaveNotice({ id: noticeSeqRef.current, message: t.saveCompleted });
+  };
+
   const saveLanguages = async () => {
     await saveUiSettings({
       theme_name: 'aurea',
@@ -83,6 +98,7 @@ export function SettingsPage() {
       response_language: responseLanguage,
       request_timeout_seconds: requestTimeoutSeconds,
     });
+    showSaveNotice();
   };
 
   return (
@@ -134,7 +150,14 @@ export function SettingsPage() {
         {agents.map((item, index) => (
           <AgentConfigForm key={item.agent_name} item={item} onChange={(next) => setAgents((curr) => curr.map((it, i) => i === index ? next : it))} />
         ))}
-        <button onClick={() => saveAgentConfigs({ mode_group: mode, items: agents })}>{t.saveAgents}</button>
+        <button
+          onClick={async () => {
+            await saveAgentConfigs({ mode_group: mode, items: agents });
+            showSaveNotice();
+          }}
+        >
+          {t.saveAgents}
+        </button>
       </div>
       <div className="panel rounded-3xl border border-cyan-300/25 bg-slate-950/75">
         <h2>{t.providers}</h2>
@@ -147,9 +170,18 @@ export function SettingsPage() {
           />
         ))}
         {providers.map((item: any) => (
-          <button key={`${item.provider_key}-save`} onClick={() => saveProvider(item)}>{t.save} {item.provider_key}</button>
+          <button
+            key={`${item.provider_key}-save`}
+            onClick={async () => {
+              await saveProvider(item);
+              showSaveNotice();
+            }}
+          >
+            {t.save} {item.provider_key}
+          </button>
         ))}
       </div>
+      {saveNotice && <p key={saveNotice.id} className="save-toast">{saveNotice.message}</p>}
     </div>
   );
 }
