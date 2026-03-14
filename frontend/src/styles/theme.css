@@ -19,8 +19,10 @@ body {
   font-family: 'Orbitron', Inter, 'Segoe UI', sans-serif;
   background-color: #060b12;
   background-image:
-    radial-gradient(circle at top, #142845 0%, #080e18 44%, #03060a 100%),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='84' viewBox='0 0 96 84'%3E%3Cg fill='none' stroke='rgba(75,227,255,0.14)' stroke-width='1'%3E%3Cpath d='M24 1l23 14v28L24 57 1 43V15z'/%3E%3Cpath d='M72 1l23 14v28L72 57 49 43V15z'/%3E%3Cpath d='M48 43l23 14v28L48 99 25 85V57z'/%3E%3C/g%3E%3C/svg%3E");
+    linear-gradient(180deg, rgba(1, 6, 16, 0.36), rgba(1, 4, 12, 0.72)),
+    url('../assets/space-window-bg.svg');
+  background-size: cover, cover;
+  background-position: center, center;
   background-attachment: fixed, fixed;
   color: var(--text);
 }
@@ -329,4 +331,21 @@ pre.panel { white-space: pre-wrap; overflow:auto; }
   .prompt-reset { width: 100%; }
   .prompt-row { grid-template-columns: 1fr; }
   .prompt-send { width: 100%; }
+}
+
+
+.save-toast {
+  position: fixed;
+  right: 20px;
+  bottom: 22px;
+  margin: 0;
+  z-index: 25;
+  border: 1px solid rgba(88, 255, 213, 0.52);
+  border-radius: 999px;
+  background: rgba(6, 17, 28, 0.92);
+  color: #c9ffef;
+  padding: 10px 14px;
+  font-size: 12px;
+  letter-spacing: .03em;
+  box-shadow: 0 0 14px rgba(88, 255, 213, 0.32);
 }
