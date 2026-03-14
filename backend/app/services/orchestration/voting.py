@@ -1,12 +1,23 @@
+import re
 from collections import Counter
 from typing import Dict, List, Tuple
 
 
 def normalize_vote(value: str) -> str:
-    v = value.strip().upper()
-    if v in {'APPROVE', 'APPROVED', '承認'}:
+    v = (value or '').strip().upper()
+    if not v:
+        return 'REJECT'
+
+    token_match = re.search(r'\b(APPROVE|REJECT|APPROVED|REJECTED)\b', v)
+    if token_match:
+        token = token_match.group(1)
+        if token in {'APPROVE', 'APPROVED'}:
+            return 'APPROVE'
+        return 'REJECT'
+
+    if any(k in v for k in {'承認', '可決', '賛成'}):
         return 'APPROVE'
-    if v in {'REJECT', 'REJECTED', '否認'}:
+    if any(k in v for k in {'否認', '却下', '反対'}):
         return 'REJECT'
     return 'REJECT'
 
@@ -15,14 +26,14 @@ def normalize_vote(value: str) -> str:
 def resolve_final_result(votes: Dict[str, str], agent_mode: str, consensus_rule: str) -> str:
     approve_count = sum(1 for v in votes.values() if normalize_vote(v) == 'APPROVE')
     if agent_mode == 'THREE' and consensus_rule == 'MAJORITY':
-        return 'APPROVED' if approve_count >= 2 else 'REJECTED'
+        return 'APPROVE' if approve_count >= 2 else 'REJECT'
     if agent_mode == 'THREE' and consensus_rule == 'UNANIMOUS':
-        return 'APPROVED' if approve_count == 3 else 'REJECTED'
+        return 'APPROVE' if approve_count == 3 else 'REJECT'
     if agent_mode == 'FIVE' and consensus_rule == 'MAJORITY':
-        return 'APPROVED' if approve_count >= 3 else 'REJECTED'
+        return 'APPROVE' if approve_count >= 3 else 'REJECT'
     if agent_mode == 'FIVE' and consensus_rule == 'UNANIMOUS':
-        return 'APPROVED' if approve_count == 5 else 'REJECTED'
-    return 'REJECTED'
+        return 'APPROVE' if approve_count == 5 else 'REJECT'
+    return 'REJECT'
 
 
 

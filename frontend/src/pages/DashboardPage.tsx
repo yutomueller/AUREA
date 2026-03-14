@@ -9,7 +9,6 @@ import { useSessionStore } from '../store/useSessionStore';
 import { useSettingsStore } from '../store/useSettingsStore';
 import { useI18n } from '../i18n';
 
-
 const FALLBACK_AGENT_CONFIGS: Record<'THREE' | 'FIVE', Array<{ agent_name: string; role_label: string; provider_key: string; model_name: string }>> = {
   THREE: [
     { agent_name: 'VERGILIUS', role_label: 'Strategy', provider_key: 'openrouter', model_name: 'openai/gpt-4o-mini' },
@@ -65,9 +64,15 @@ export function DashboardPage() {
   return (
     <div className="dashboard-grid main-expanded">
       <div className="center-col">
-        <section className={`panel magi-stage ${agentMode === 'THREE' ? 'triangle' : 'pentagon'}`}>
+        <section
+          className={`panel magi-stage rounded-3xl border border-cyan-300/30 bg-gradient-to-b from-slate-900/90 via-slate-950/90 to-slate-950/95 shadow-neon ${agentMode === 'THREE' ? 'triangle' : 'pentagon'}`}
+        >
           <div className="core-slot">
-            <CoreDecisionPanel result={currentSession?.session?.final_result || currentSession?.result?.final_result} status={currentSession?.session?.status || currentSession?.result?.status} />
+            <CoreDecisionPanel
+              result={currentSession?.session?.final_result || currentSession?.result?.final_result}
+              status={currentSession?.session?.status || currentSession?.result?.status}
+              isRunning={loading}
+            />
           </div>
           <div className="agent-grid">
             {agentConfigs.map((item, index) => (
@@ -75,15 +80,16 @@ export function DashboardPage() {
             ))}
           </div>
         </section>
-        <section className="panel prompt-composer">
+        <section className="panel prompt-composer rounded-3xl border border-cyan-300/35 bg-gradient-to-br from-slate-900/95 via-slate-900/90 to-cyan-950/40 shadow-neon">
+          <div className="mb-1 text-xs font-semibold uppercase tracking-[0.2em] text-cyan-200/80">Mission Control</div>
           <input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder={t.decisionTitle}
-            className="prompt-title"
+            className="prompt-title border-cyan-200/40 bg-slate-950/80 focus:border-cyan-200/80 focus:outline-none focus:ring-2 focus:ring-cyan-300/30"
           />
           <div className="prompt-actions">
-            <button className="prompt-reset" onClick={resetToStart}>
+            <button className="prompt-reset border-cyan-200/50 text-cyan-100 hover:bg-cyan-300/10" onClick={resetToStart}>
               {t.resetHome}
             </button>
           </div>
@@ -93,9 +99,13 @@ export function DashboardPage() {
               onChange={(e) => setQuery(e.target.value)}
               rows={3}
               placeholder={t.describeAgenda}
-              className="prompt-input"
+              className="prompt-input border-cyan-300/40 bg-slate-950/80 focus:border-cyan-200/80 focus:outline-none focus:ring-2 focus:ring-cyan-300/30"
             />
-            <button className="prompt-send" onClick={execute} disabled={loading || !query.trim()}>
+            <button
+              className="prompt-send border-emerald-300/50 bg-gradient-to-r from-cyan-500/35 to-emerald-400/25 text-cyan-50 enabled:hover:from-cyan-400/45 enabled:hover:to-emerald-300/35 disabled:cursor-not-allowed disabled:opacity-40"
+              onClick={execute}
+              disabled={loading || !query.trim()}
+            >
               {loading ? t.running : t.execute}
             </button>
           </div>
