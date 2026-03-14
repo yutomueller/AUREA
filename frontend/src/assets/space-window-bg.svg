@@ -1,0 +1,47 @@
+<svg width="1365" height="768" viewBox="0 0 1365 768" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="space" x1="682.5" y1="0" x2="682.5" y2="768" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#10244A"/>
+      <stop offset="0.5" stop-color="#071633"/>
+      <stop offset="1" stop-color="#030A1D"/>
+    </linearGradient>
+    <radialGradient id="nebulaA" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(940 210) rotate(156.7) scale(560 240)">
+      <stop stop-color="#87A9FF" stop-opacity="0.44"/>
+      <stop offset="0.54" stop-color="#5E7BD8" stop-opacity="0.2"/>
+      <stop offset="1" stop-color="#5E7BD8" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="nebulaB" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(380 120) rotate(19.4) scale(420 170)">
+      <stop stop-color="#7BD8FF" stop-opacity="0.28"/>
+      <stop offset="0.62" stop-color="#4E8FCE" stop-opacity="0.14"/>
+      <stop offset="1" stop-color="#4E8FCE" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="softGlow" x="-150" y="-150" width="1665" height="1068" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="4"/>
+    </filter>
+  </defs>
+
+  <rect width="1365" height="768" fill="url(#space)"/>
+  <ellipse cx="940" cy="210" rx="560" ry="240" fill="url(#nebulaA)"/>
+  <ellipse cx="380" cy="120" rx="420" ry="170" fill="url(#nebulaB)"/>
+
+  <g fill="#DCEBFF" filter="url(#softGlow)">
+    <circle cx="124" cy="78" r="2.2"/><circle cx="242" cy="122" r="1.9"/><circle cx="362" cy="70" r="1.4"/><circle cx="468" cy="148" r="1.8"/>
+    <circle cx="596" cy="96" r="1.6"/><circle cx="724" cy="136" r="2.1"/><circle cx="846" cy="62" r="1.8"/><circle cx="942" cy="132" r="1.7"/>
+    <circle cx="1068" cy="94" r="2.3"/><circle cx="1188" cy="146" r="1.7"/><circle cx="1260" cy="88" r="2.0"/><circle cx="1318" cy="170" r="1.6"/>
+    <circle cx="196" cy="242" r="1.7"/><circle cx="308" cy="286" r="2.0"/><circle cx="436" cy="244" r="1.5"/><circle cx="542" cy="312" r="1.8"/>
+    <circle cx="678" cy="268" r="2.4"/><circle cx="794" cy="330" r="1.8"/><circle cx="902" cy="282" r="1.6"/><circle cx="1016" cy="352" r="2.0"/>
+    <circle cx="1144" cy="296" r="1.9"/><circle cx="1268" cy="340" r="2.3"/>
+  </g>
+
+  <g fill="#FFFFFF" fill-opacity="0.88">
+    <circle cx="72" cy="186" r="0.8"/><circle cx="166" cy="38" r="1"/><circle cx="226" cy="206" r="0.9"/><circle cx="286" cy="170" r="0.7"/>
+    <circle cx="338" cy="230" r="0.9"/><circle cx="416" cy="34" r="0.8"/><circle cx="498" cy="218" r="1"/><circle cx="558" cy="174" r="0.7"/>
+    <circle cx="636" cy="50" r="0.8"/><circle cx="696" cy="210" r="1"/><circle cx="772" cy="184" r="0.9"/><circle cx="818" cy="28" r="0.8"/>
+    <circle cx="880" cy="236" r="0.9"/><circle cx="950" cy="190" r="0.8"/><circle cx="1014" cy="42" r="0.9"/><circle cx="1088" cy="236" r="1"/>
+    <circle cx="1162" cy="184" r="0.8"/><circle cx="1214" cy="42" r="0.9"/><circle cx="1288" cy="230" r="0.8"/>
+    <circle cx="92" cy="300" r="0.7"/><circle cx="170" cy="354" r="0.9"/><circle cx="250" cy="314" r="0.8"/><circle cx="334" cy="380" r="0.9"/>
+    <circle cx="420" cy="336" r="0.8"/><circle cx="502" cy="404" r="1"/><circle cx="590" cy="364" r="0.7"/><circle cx="664" cy="430" r="0.9"/>
+    <circle cx="748" cy="390" r="0.8"/><circle cx="824" cy="446" r="0.9"/><circle cx="908" cy="406" r="0.8"/><circle cx="996" cy="460" r="0.9"/>
+    <circle cx="1080" cy="414" r="0.8"/><circle cx="1164" cy="476" r="0.9"/><circle cx="1248" cy="434" r="0.8"/><circle cx="1320" cy="500" r="0.9"/>
+  </g>
+</svg>
