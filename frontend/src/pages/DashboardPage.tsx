@@ -68,7 +68,11 @@ export function DashboardPage() {
           className={`panel magi-stage rounded-3xl border border-cyan-300/30 bg-gradient-to-b from-slate-900/90 via-slate-950/90 to-slate-950/95 shadow-neon ${agentMode === 'THREE' ? 'triangle' : 'pentagon'}`}
         >
           <div className="core-slot">
-            <CoreDecisionPanel result={currentSession?.session?.final_result || currentSession?.result?.final_result} status={currentSession?.session?.status || currentSession?.result?.status} />
+            <CoreDecisionPanel
+              result={currentSession?.session?.final_result || currentSession?.result?.final_result}
+              status={currentSession?.session?.status || currentSession?.result?.status}
+              isRunning={loading}
+            />
           </div>
           <div className="agent-grid">
             {agentConfigs.map((item, index) => (
