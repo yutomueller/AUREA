@@ -10,11 +10,21 @@ export type SessionMessage = {
 
 const AGENT_ACCENT_CLASSES = ['accent-1', 'accent-2', 'accent-3', 'accent-4', 'accent-5'] as const;
 
+const FIXED_ACCENT_BY_AGENT: Record<string, (typeof AGENT_ACCENT_CLASSES)[number]> = {
+  VERGILIUS: 'accent-1',
+  VERGLIUS: 'accent-1',
+  HORATIUS: 'accent-2',
+  OVIDIUS: 'accent-3',
+  OVDIUS: 'accent-3',
+};
+
 const toTimestamp = (value?: string) => {
   if (!value) return 0;
   const parsed = Date.parse(value);
   return Number.isNaN(parsed) ? 0 : parsed;
 };
+
+const normalizeAgentName = (value: string) => value.trim().toUpperCase();
 
 export const compareMessages = (a: SessionMessage, b: SessionMessage) => {
   const roundDiff = (a.round_no ?? 0) - (b.round_no ?? 0);
@@ -41,9 +51,17 @@ export const getLatestMessagesByAgent = (messages: SessionMessage[]) => {
 
 export const getAgentAccentMap = (agentNames: string[]) => {
   const map = new Map<string, string>();
+  let fallbackIndex = 0;
 
-  agentNames.forEach((agentName, index) => {
-    map.set(agentName, AGENT_ACCENT_CLASSES[index % AGENT_ACCENT_CLASSES.length]);
+  agentNames.forEach((agentName) => {
+    const fixedClass = FIXED_ACCENT_BY_AGENT[normalizeAgentName(agentName)];
+    if (fixedClass) {
+      map.set(agentName, fixedClass);
+      return;
+    }
+
+    map.set(agentName, AGENT_ACCENT_CLASSES[fallbackIndex % AGENT_ACCENT_CLASSES.length]);
+    fallbackIndex += 1;
   });
 
   return map;
