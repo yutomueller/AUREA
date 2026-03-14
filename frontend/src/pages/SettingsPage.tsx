@@ -35,7 +35,7 @@ export function SettingsPage() {
   const [mode, setMode] = useState<'THREE' | 'FIVE'>('THREE');
   const [agents, setAgents] = useState<any[]>([]);
   const [providers, setProviders] = useState<any[]>([]);
-  const [saveNotice, setSaveNotice] = useState<string | null>(null);
+  const [saveNotice, setSaveNotice] = useState<{ id: number; message: string } | null>(null);
   const uiLanguage = useSettingsStore((s) => s.uiLanguage);
   const responseLanguage = useSettingsStore((s) => s.responseLanguage);
   const requestTimeoutSeconds = useSettingsStore((s) => s.requestTimeoutSeconds);
@@ -82,7 +82,7 @@ export function SettingsPage() {
     return () => window.clearTimeout(timer);
   }, [saveNotice]);
 
-  const showSaveNotice = () => setSaveNotice(t.saveCompleted);
+  const showSaveNotice = () => setSaveNotice({ id: Date.now(), message: t.saveCompleted });
 
   const saveLanguages = async () => {
     await saveUiSettings({
@@ -177,7 +177,7 @@ export function SettingsPage() {
           </button>
         ))}
       </div>
-      {saveNotice && <p className="save-toast">{saveNotice}</p>}
+      {saveNotice && <p key={saveNotice.id} className="save-toast">{saveNotice.message}</p>}
     </div>
   );
 }
