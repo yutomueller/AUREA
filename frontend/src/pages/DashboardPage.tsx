@@ -67,7 +67,7 @@ export function DashboardPage() {
     <div className="dashboard-grid main-expanded">
       <div className="center-col">
         <section
-          className={`panel magi-stage rounded-3xl border border-cyan-300/30 bg-gradient-to-b from-slate-900/90 via-slate-950/90 to-slate-950/95 shadow-neon ${agentMode === 'THREE' ? 'triangle' : 'pentagon'}`}
+          className={`panel magi-stage rounded-3xl border border-cyan-300/30 bg-gradient-to-b from-slate-900/90 via-slate-950/90 to-slate-950/95 shadow-neon ${agentMode === 'THREE' ? 'triangle' : 'pentagon'} ${loading ? 'is-deliberating' : ''}`}
         >
           <div className="core-slot">
             <CoreDecisionPanel
