@@ -15,6 +15,21 @@ const DEFAULT_PROVIDER_ITEMS = [
   { provider_key: 'lmstudio', display_name: 'LM Studio', base_url: 'http://localhost:1234/v1', api_key: '', is_enabled: true },
 ];
 
+const FALLBACK_AGENT_CONFIGS: Record<'THREE' | 'FIVE', Array<any>> = {
+  THREE: [
+    { agent_name: 'VERGILIUS', role_label: 'Strategy', persona_description: '', system_prompt: '', provider_key: 'openrouter', model_name: 'openai/gpt-4o-mini', max_tokens: 512 },
+    { agent_name: 'HORATIUS', role_label: 'Ethics', persona_description: '', system_prompt: '', provider_key: 'openrouter', model_name: 'openai/gpt-4o-mini', max_tokens: 512 },
+    { agent_name: 'OVIDIUS', role_label: 'Intuition', persona_description: '', system_prompt: '', provider_key: 'openrouter', model_name: 'openai/gpt-4o-mini', max_tokens: 512 },
+  ],
+  FIVE: [
+    { agent_name: 'VERGILIUS', role_label: 'Strategy', persona_description: '', system_prompt: '', provider_key: 'openrouter', model_name: 'openai/gpt-4o-mini', max_tokens: 512 },
+    { agent_name: 'HORATIUS', role_label: 'Ethics', persona_description: '', system_prompt: '', provider_key: 'openrouter', model_name: 'openai/gpt-4o-mini', max_tokens: 512 },
+    { agent_name: 'OVIDIUS', role_label: 'Intuition', persona_description: '', system_prompt: '', provider_key: 'openrouter', model_name: 'openai/gpt-4o-mini', max_tokens: 512 },
+    { agent_name: 'LUCRETIUS', role_label: 'Analysis', persona_description: '', system_prompt: '', provider_key: 'openrouter', model_name: 'openai/gpt-4o-mini', max_tokens: 512 },
+    { agent_name: 'CATULLUS', role_label: 'Emotion', persona_description: '', system_prompt: '', provider_key: 'openrouter', model_name: 'openai/gpt-4o-mini', max_tokens: 512 },
+  ],
+};
+
 export function SettingsPage() {
   const t = useI18n();
   const [mode, setMode] = useState<'THREE' | 'FIVE'>('THREE');
@@ -33,9 +48,14 @@ export function SettingsPage() {
   const setConsensusRule = useSettingsStore((s) => s.setConsensusRule);
 
   useEffect(() => {
+    setMode(agentMode);
+  }, [agentMode]);
+
+  useEffect(() => {
+    setAgents(FALLBACK_AGENT_CONFIGS[mode]);
     getAgentConfigs(mode)
-      .then((res) => setAgents(res.items || []))
-      .catch(() => setAgents([]));
+      .then((res) => setAgents(res?.items?.length ? res.items : FALLBACK_AGENT_CONFIGS[mode]))
+      .catch(() => setAgents(FALLBACK_AGENT_CONFIGS[mode]));
   }, [mode]);
 
   useEffect(() => {
@@ -67,11 +87,11 @@ export function SettingsPage() {
 
   return (
     <div className="settings-grid">
-      <div className="panel">
+      <div className="panel rounded-3xl border border-cyan-300/25 bg-slate-950/75">
         <h2>{t.language}</h2>
         <LanguageSwitcher onSave={saveLanguages} />
       </div>
-      <div className="panel">
+      <div className="panel rounded-3xl border border-cyan-300/25 bg-slate-950/75">
         <h2>{t.requestTimeout}</h2>
         <label>
           {t.requestTimeout}
@@ -85,7 +105,7 @@ export function SettingsPage() {
         </label>
         <button onClick={saveLanguages}>{t.save}</button>
       </div>
-      <div className="panel">
+      <div className="panel rounded-3xl border border-cyan-300/25 bg-slate-950/75">
         <h2>{t.agentMode}</h2>
         <RunModeSelector
           agentMode={agentMode}
@@ -96,14 +116,27 @@ export function SettingsPage() {
           setConsensusRule={setConsensusRule}
         />
       </div>
-      <div className="panel">
-        <h2>{t.agents}</h2>
+      <div className="panel rounded-3xl border border-cyan-300/25 bg-slate-950/75">
+        <div className="mb-3 flex items-center justify-between gap-4">
+          <h2 className="m-0">{t.agents}</h2>
+          <label className="text-xs uppercase tracking-[0.2em] text-cyan-200/80">
+            config mode
+            <select
+              className="ml-2 rounded-full border border-cyan-300/40 bg-slate-900/80 px-3 py-1 text-cyan-100"
+              value={mode}
+              onChange={(e) => setMode(e.target.value as 'THREE' | 'FIVE')}
+            >
+              <option value="THREE">3 Agents</option>
+              <option value="FIVE">5 Agents</option>
+            </select>
+          </label>
+        </div>
         {agents.map((item, index) => (
           <AgentConfigForm key={item.agent_name} item={item} onChange={(next) => setAgents((curr) => curr.map((it, i) => i === index ? next : it))} />
         ))}
         <button onClick={() => saveAgentConfigs({ mode_group: mode, items: agents })}>{t.saveAgents}</button>
       </div>
-      <div className="panel">
+      <div className="panel rounded-3xl border border-cyan-300/25 bg-slate-950/75">
         <h2>{t.providers}</h2>
         {providers.map((item: any, index: number) => (
           <ProviderConfigForm
